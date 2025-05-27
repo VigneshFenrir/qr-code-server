@@ -50,5 +50,28 @@ controller.getProducts = async (req, res) => {
     productData: product,
   });
 };
+controller.deleteProduct = async (req, res) => {
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "Id not found" });
+  }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "ID NOT FOUND" });
+  }
+  const product = await ProductModel.findByIdAndDelete(id);
+  if (!product) {
+    res.status(400).json({
+      success: false,
+      statusCode: 400,
+      error: "failed to delete",
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    statusCode: 200,
+    message: "Product Deleted successfully",
+    productData: product,
+  });
+};
 
 export default controller;
